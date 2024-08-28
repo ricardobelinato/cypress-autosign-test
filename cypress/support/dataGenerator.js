@@ -1,4 +1,4 @@
-export { gerarNome, gerarNome2, gerarEmail, gerarCep, cpf, numTel, dataNascimento};
+export { gerarNome, gerarNome2, gerarEmail, gerarCep, gerarRG, gerarCnpj, cpf, numTel, dataNascimento};
 
 //Aleatoriza nome e sobrenome
 function gerarNome() {
@@ -9,13 +9,11 @@ function gerarNome() {
 
 //Gera o nome
 function gerarNome2(nomeAleatorio, sobrenomeAleatorio) {
-    // const { nomeAleatorio, sobrenomeAleatorio } = gerarNome();
     return nomeAleatorio + ' ' + sobrenomeAleatorio + ' ' + 'Teste Rubeus';
 }
 
 //Gera o email
 function gerarEmail(nomeAleatorio, sobrenomeAleatorio) {
-    // const { nomeAleatorio, sobrenomeAleatorio } = gerarNome();
     const emailAleatorio = nomeAleatorio.toLowerCase() + sobrenomeAleatorio.toLowerCase() + 'testerubeus@rubeusteste.com.br';
     return emailAleatorio;
 }
@@ -73,12 +71,26 @@ const sobrenomes = [
 ]
 
 //Gerar cep
-function gerarCep() {
+function gerarCep(){
     const cepAleatorio = ceps[Math.floor(Math.random() * ceps.length)];
     return cepAleatorio
 }
 
 const ceps = ['40415265', '69317176', '93280320', '69067801', '49009079', '77825050', '49032280', '78065752', '60811296', '68627502', '58429160', '29161828', '72620316', '71610075', '45077056', '59625187', '64003083', '39803160', '25908822', '99711210']
+
+//Gerar RG
+function gerarRG(){
+    const RGAleatorio = rg[Math.floor(Math.random() * rg.lenght)];
+}
+
+const rg = ['17.319.565-9', '44.149.591-6', '15.435.024-2', '40.362.489-7', '35.663.382-2']
+
+//Gerar CNPJ
+function gerarCnpj(){
+    const CnpjAleatorio = cnpj[Math.floor(Math.random() * cnpj.length)];
+}
+
+const cnpj = ['49.916.093/0001-98', '02.268.939/0001-67', '26.525.339/0001-03', '07.384.022/0001-41', '96.207.810/0001-92']
 
 //Gerar cpf
 let create_array = (total, numero) => Array.from(Array(total), () => number_random(numero));
@@ -111,5 +123,3 @@ function numTel(){
 function dataNascimento(){
     return '01012006'
 }
-
-//cnpj
