@@ -10,8 +10,6 @@ const dataNascimentoMaior = dataNascimento();
 describe('Varredura de campos', () => {
 
     it('Primeiro passo da inscrição', () => {
-        cy.wait(6000);
-
         cy.get('div').each(($div) => {
             if ($div.hasClass('nomeCompleto')) {
                 cy.wrap($div).find('input').type(nomeCompleto);

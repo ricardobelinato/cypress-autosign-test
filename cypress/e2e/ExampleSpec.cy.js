@@ -1,7 +1,7 @@
 function CONFIG(){
     return {
-        url: "https://portal.apprbs.com.br/unifev-homolog",
-        ps: 0
+        url: "",
+        ps: 1
     };
 }
 

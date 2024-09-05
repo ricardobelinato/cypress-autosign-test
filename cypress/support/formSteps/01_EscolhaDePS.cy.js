@@ -9,5 +9,8 @@ describe('Escolha de PS', module.exports = () => {
     cy.get('mat-option').eq(CONFIG().ps).click()
 
     cy.get('button.mat-raised-button.mat-button-base.mat-primary').should('be.visible').click()
+
+    cy.get('app-client-loader div').should('exist');
+    cy.get('app-client-loader div').should('not.exist');
   })
 })
