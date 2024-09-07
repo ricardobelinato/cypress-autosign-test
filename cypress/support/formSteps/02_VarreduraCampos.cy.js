@@ -6,6 +6,7 @@ const emailAleatorio = gerarEmail(nomeAleatorio, sobrenomeAleatorio);
 const telefoneAleatorio = numTel();
 const cpfAleatorio = cpf();
 const dataNascimentoMaior = dataNascimento();
+let numCamposPreenchidos = 0;
 
 describe('Varredura de campos', () => {
 
@@ -13,39 +14,39 @@ describe('Varredura de campos', () => {
         cy.get('div').each(($div) => {
             if ($div.hasClass('nomeCompleto')) {
                 cy.wrap($div).find('input').type(nomeCompleto);
+                numCamposPreenchidos += 1;
             }
             if ($div.hasClass('email')) {
                 cy.wrap($div).find('input').type(emailAleatorio);
+                numCamposPreenchidos += 1;
             }
             if ($div.hasClass('celular')) {
                 cy.wrap($div).find('input').type(telefoneAleatorio);
+                numCamposPreenchidos += 1;
             }
             if ($div.hasClass('cpfRespInsc') || $div.hasClass('cpfCandidato')) {
                 cy.wrap($div).find('input').type(cpfAleatorio);
+                numCamposPreenchidos += 1;
             }
             if ($div.hasClass('dataNascimento')) {
                 cy.wrap($div).find('input[type="text"]').type(dataNascimentoMaior);
+                numCamposPreenchidos += 1;
             }
         });
 
-        cy.get('.form-check-input').eq(1).check({force:true})
+        // if (numCamposPreenchidos == 0){
+        //     cy.get('label').contains('Nome completo *').parent().find('input').type(nomeCompleto);
+        //     cy.get('label').contains('E-mail *').parent().find('input').type(emailAleatorio);
+        //     cy.get('label').contains('Celular *').parent().find('input').type(telefoneAleatorio);
+        //     cy.get('label').contains('CPF *').parent().find('input').type(cpfAleatorio);
+        //     cy.get('label').contains('Data de Nascimento *').parent().find('input').type(dataNascimentoMaior);
+        // }
 
-        // cy.get('button.btn-primary').click();
-        // .then(() => {
-        //     cy.wait(5000);
-        //     cy.get('button.btn-primary').click();
-        // });
+        cy.get('.form-check-input').eq(1).check({force:true})
+        cy.get('button').contains('Avançar').click();
+
     });
     it('Segundo passo da inscrição', () => {
 
     });
 });
-
-// ps-button btn btn-raised btn btn-primary btn-md
-// ps-button btn btn-raised btn btn-primary btn-md
-
-// get each pra buscar cada div
-// conferir se tal div tem tal classe atraves do if
-// caso tenha, dar um .type pra preencher o valor
-// caso seja Selection, selecionar a primeira opção
-// caso exista checkbox (politica privacidade) marcar

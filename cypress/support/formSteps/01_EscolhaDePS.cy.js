@@ -1,4 +1,3 @@
-// const { CONFIG } = require('../../e2e/UnipamPreSpec.cy');
 const { CONFIG } = require('../../e2e/ExampleSpec.cy');
 
 describe('Escolha de PS', module.exports = () => {

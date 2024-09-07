@@ -1,7 +1,7 @@
 function CONFIG(){
     return {
-        url: "",
-        ps: 1
+        url: "https://matricula.ucb.catolica.edu.br",
+        ps: 0
     };
 }
 
