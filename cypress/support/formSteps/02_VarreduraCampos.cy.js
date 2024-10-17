@@ -7,13 +7,21 @@ const nomeCompletoAleatorio = gerarNomeCompleto(nomeAleatorio, sobrenomeAleatori
 const emailAleatorio = gerarEmail(nomeAleatorio, sobrenomeAleatorio);
 const celularAleatorio = gerarCelular();
 const CPFAleatorio = gerarCPF();
-const dataNascimentoMaior = gerarDataNascimentoMaior();
-const dataNascimentoMenor = gerarDataNascimentoMenor();
+let dataNascimento;
 const cepAleatorio = gerarCep();
 const RGAleatorio = gerarRG();
 const CNPJAleatorio = gerarCNPJ();
 
 describe('Varredura de campos', () => {
+    before(() => {
+        if (CANDIDATO().idade == "+") {
+            dataNascimento = gerarDataNascimentoMaior();
+        }
+        if (CANDIDATO().idade == "-") {
+            dataNascimento = gerarDataNascimentoMenor();
+        }
+    });
+
     it('Leitura e preenchimento dos campos do primeiro passo da inscrição', () => {
         cy.document().then((doc) => {
             const labels = [
@@ -21,7 +29,7 @@ describe('Varredura de campos', () => {
                 { text: 'E-mail *', value: emailAleatorio },
                 { text: 'Celular *', value: celularAleatorio },
                 { text: 'CPF *', value: CPFAleatorio },
-                { text: 'Data de nascimento *', value: dataNascimentoMaior }
+                { text: 'Data de nascimento *', value: dataNascimento }
             ];
 
             labels.forEach(labelObj => {
@@ -35,24 +43,21 @@ describe('Varredura de campos', () => {
                 }
             });
         });
+    });
 
-        // .then(() => {
-        //     cy.get('input[type="radio"]').each(($inputRadio) => {
-        //         cy.wrap($inputRadio).first().check({ force: true });
-        //     });
-        // });
+    it('Marcação dos campos radio e checkbox', () => {
+        cy.get(`input[type="radio"][value="${CANDIDATO().sexo}"]`, { log: false }).then($campo => {
+            if ($campo.length > 0) {
+                cy.wrap($campo).check({ force: true });
+            }
+        })
+        cy.get(`input[type="radio"][value="${CANDIDATO().nacionalidade}"]`, { log: false }).then($campo => {
+            if ($campo.length > 0) {
+                cy.wrap($campo).check({ force: true });
+            }
+        });
 
-        // .then(() => {
-        //     cy.get('div').each(($div) => {
-        //     if ($div.hasClass('generoTOTVS')) {
-        //         cy.wrap($div).find('input[value="M"]').check();
-        //         numCamposPreenchidos += 1;
-        //     }
-        // });
-
-        // cy.get('strong').contains('Política de Privacidade').parents('div').prev().find('input[type="checkbox"]').check({ force: true });
         cy.get('input[type="checkbox"]').eq(1).check({ force: true })
-
     });
 
     it('Exibição de campos ocultos do primeiro passo da inscrição', () => {
