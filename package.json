@@ -1,4 +1,13 @@
 {
+  "name": "cypress_auto_sign",
+  "description": "",
+  "version": "1.0.0",
+  "scripts": {
+    "cy:open": "cypress open"
+  },
+  "author": "Ricardo Belinato <ricbelinato@gmail.com>",
+  "license": "",
+
   "devDependencies": {
     "cypress": "^13.13.3"
   }
