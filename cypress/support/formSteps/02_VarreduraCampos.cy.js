@@ -1,7 +1,4 @@
 import { gerarNomeESobrenome, gerarNomeCompleto, gerarEmail, gerarCelular, gerarCPF, gerarDataNascimentoMaior, gerarDataNascimentoMenor, gerarCep, gerarRG, gerarCNPJ } from '../dataGenerator';
-
-const { CANDIDATO } = require('../../config/configSpec');
-
 const { nomeAleatorio, sobrenomeAleatorio } = gerarNomeESobrenome();
 const nomeCompletoAleatorio = gerarNomeCompleto(nomeAleatorio, sobrenomeAleatorio);
 const emailAleatorio = gerarEmail(nomeAleatorio, sobrenomeAleatorio);
@@ -12,12 +9,17 @@ const cepAleatorio = gerarCep();
 const RGAleatorio = gerarRG();
 const CNPJAleatorio = gerarCNPJ();
 
+const { CANDIDATO } = require('../../config/configSpec');
+const IdadeCandidato = CANDIDATO().idade;
+const SexoCandidato = CANDIDATO().sexo;
+const NacionalidadeCandidato = CANDIDATO().nacionalidade;
+
 describe('Varredura de campos', () => {
     before(() => {
-        if (CANDIDATO().idade == "+") {
+        if (IdadeCandidato == "+") {
             dataNascimento = gerarDataNascimentoMaior();
         }
-        if (CANDIDATO().idade == "-") {
+        if (IdadeCandidato == "-") {
             dataNascimento = gerarDataNascimentoMenor();
         }
     });
@@ -47,12 +49,12 @@ describe('Varredura de campos', () => {
 
     it('Marcação dos campos radio e checkbox', () => {
         cy.get('body').then($body => {
-            if ($body.find(`input[type="radio"][value="${CANDIDATO().sexo}"]`).length > 0) {
-                cy.get(`input[type="radio"][value="${CANDIDATO().sexo}"]`, { log: false }).check({ force: true });
+            if ($body.find(`input[type="radio"][value="${SexoCandidato}"]`).length > 0) {
+                cy.get(`input[type="radio"][value="${SexoCandidato}"]`, { log: false }).check({ force: true });
             }
 
-            if ($body.find(`input[type="radio"][value="${CANDIDATO().nacionalidade}"]`).length > 0) {
-                cy.get(`input[type="radio"][value="${CANDIDATO().nacionalidade}"]`, { log: false }).check({ force: true });
+            if ($body.find(`input[type="radio"][value="${NacionalidadeCandidato}"]`).length > 0) {
+                cy.get(`input[type="radio"][value="${NacionalidadeCandidato}"]`, { log: false }).check({ force: true });
             }
         });
 
