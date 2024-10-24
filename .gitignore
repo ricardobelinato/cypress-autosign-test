@@ -3,6 +3,6 @@ cypress/downloads/
 cypress/e2e/
 cypress/screenshots/
 !cypress/e2e/ExampleSpec.cy.js
-melhorias.md
+backlog.md
 cypress/support/tracking.service.ts
 cypress/config/configSpec.js

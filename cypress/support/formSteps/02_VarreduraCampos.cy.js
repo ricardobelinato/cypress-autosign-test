@@ -46,14 +46,13 @@ describe('Varredura de campos', () => {
     });
 
     it('Marcação dos campos radio e checkbox', () => {
-        cy.get(`input[type="radio"][value="${CANDIDATO().sexo}"]`, { log: false }).then($campo => {
-            if ($campo.length > 0) {
-                cy.wrap($campo).check({ force: true });
+        cy.get('body').then($body => {
+            if ($body.find(`input[type="radio"][value="${CANDIDATO().sexo}"]`).length > 0) {
+                cy.get(`input[type="radio"][value="${CANDIDATO().sexo}"]`, { log: false }).check({ force: true });
             }
-        })
-        cy.get(`input[type="radio"][value="${CANDIDATO().nacionalidade}"]`, { log: false }).then($campo => {
-            if ($campo.length > 0) {
-                cy.wrap($campo).check({ force: true });
+
+            if ($body.find(`input[type="radio"][value="${CANDIDATO().nacionalidade}"]`).length > 0) {
+                cy.get(`input[type="radio"][value="${CANDIDATO().nacionalidade}"]`, { log: false }).check({ force: true });
             }
         });
 
