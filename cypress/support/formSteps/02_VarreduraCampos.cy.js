@@ -10,9 +10,10 @@ const RGAleatorio = gerarRG();
 const CNPJAleatorio = gerarCNPJ();
 
 const { CANDIDATO } = require('../../config/configSpec');
-const IdadeCandidato = CANDIDATO().idade;
-const SexoCandidato = CANDIDATO().sexo;
-const NacionalidadeCandidato = CANDIDATO().nacionalidade;
+const candidato = CANDIDATO();
+const IdadeCandidato = candidato.idade;
+const SexoCandidato = candidato.sexo;
+const NacionalidadeCandidato = candidato.nacionalidade; 
 
 describe('Varredura de campos', () => {
     before(() => {
@@ -23,7 +24,7 @@ describe('Varredura de campos', () => {
             dataNascimento = gerarDataNascimentoMenor();
         }
     });
-
+    
     it('Leitura e preenchimento dos campos do primeiro passo da inscrição', () => {
         cy.document().then((doc) => {
             const labels = [
@@ -50,15 +51,15 @@ describe('Varredura de campos', () => {
     it('Marcação dos campos radio e checkbox', () => {
         cy.get('body').then($body => {
             if ($body.find(`input[type="radio"][value="${SexoCandidato}"]`).length > 0) {
-                cy.get(`input[type="radio"][value="${SexoCandidato}"]`, { log: false }).check({ force: true });
+                cy.get(`input[type="radio"][value="${SexoCandidato}"]`, { log: false }).should('be.visible').check({ force: true });
             }
 
             if ($body.find(`input[type="radio"][value="${NacionalidadeCandidato}"]`).length > 0) {
-                cy.get(`input[type="radio"][value="${NacionalidadeCandidato}"]`, { log: false }).check({ force: true });
+                cy.get(`input[type="radio"][value="${NacionalidadeCandidato}"]`, { log: false }).should('be.visible').check({ force: true });
             }
         });
 
-        cy.get('input[type="checkbox"]').eq(1).check({ force: true })
+        cy.get('input[type="checkbox"]').eq(1).should('be.visible').check({ force: true })
     });
 
     it('Exibição de campos ocultos do primeiro passo da inscrição', () => {
@@ -75,9 +76,9 @@ describe('Varredura de campos', () => {
                 i++;
             }
         });
-    })
+    });
 
     it('Conclusão do primeiro passo da inscrição', () => {
         // cy.get('button').contains('Avançar').click();
-    })
+    });
 });
