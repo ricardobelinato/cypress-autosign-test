@@ -9,7 +9,7 @@ function CONFIG(){
 function CANDIDATO(){
     return {
         idade: "-", //'+' para maior ou igual a 18 anos ou '-' para menor de 18 anos
-        sexo: "M", //'M' para masculino ou 'F' para feminino
+        sexo: "M", //'M' para masculino ou 'F' para feminino 
         nacionalidade: "0", //'0' para brasileiro ou '1' para estrangeiro
     }
 }
