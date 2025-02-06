@@ -1,4 +1,5 @@
 const { CONFIG } = require('../../config/configSpec');
+const config = CONFIG();
 
 describe('Escolha de PS', () => {
   before(() => {
@@ -19,25 +20,21 @@ describe('Escolha de PS', () => {
       method: 'POST',
       pathname: '/api/applyment/getApplymentDataByStep/*',
     }).as('applymentLoading');
+
+    cy.intercept({
+      method: "POST",
+      pathname: "/api/getOffersAllowed",
+    }).as("getOffersAllowedLoading");
   })
 
   it('Navega para a URL', () => {
-    cy.visit(CONFIG().url);
+    cy.visit(config.url);
     cy.wait('@pageLoading');
-  });
-
-  it('Remove a tag script duplicada do tracking no body', () => {
-    cy.document().then((doc) => {
-      const scriptToRemoveBody = doc.querySelector('body script[src="https://tracking.apprubeus.com.br/libs/RBTracking.min.js?rbclicod=aRqQCldPocOJ4hUr5nno"]');
-      if (scriptToRemoveBody) {
-        scriptToRemoveBody.remove();
-      }
-    });
   });
 
   it('Interação com mat-selector, escolha do processo seletivo', () => {
     cy.get('mat-select#mat-select-0').should('be.visible').click();
-    cy.get('mat-option').eq(CONFIG().ps).should('be.visible').click();
+    cy.get('mat-option').eq(config.ps).should('be.visible').click();
 
     cy.get('button.mat-raised-button.mat-button-base.mat-primary').should('be.visible').click();
     cy.wait('@applymentLoading');

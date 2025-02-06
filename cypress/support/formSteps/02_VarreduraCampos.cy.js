@@ -1,6 +1,20 @@
-import { gerarNomeESobrenome, gerarNomeCompleto, gerarEmail, gerarCelular, gerarCPF, gerarDataNascimentoMaior, gerarDataNascimentoMenor, gerarCep, gerarRG, gerarCNPJ } from '../dataGenerator';
+import {
+  gerarNomeESobrenome,
+  gerarNomeCompleto,
+  gerarEmail,
+  gerarCelular,
+  gerarCPF,
+  gerarDataNascimentoMaior,
+  gerarDataNascimentoMenor,
+  gerarCep,
+  gerarRG,
+  gerarCNPJ,
+} from "../dataGenerator";
 const { nomeAleatorio, sobrenomeAleatorio } = gerarNomeESobrenome();
-const nomeCompletoAleatorio = gerarNomeCompleto(nomeAleatorio, sobrenomeAleatorio);
+const nomeCompletoAleatorio = gerarNomeCompleto(
+  nomeAleatorio,
+  sobrenomeAleatorio
+);
 const emailAleatorio = gerarEmail(nomeAleatorio, sobrenomeAleatorio);
 const celularAleatorio = gerarCelular();
 const CPFAleatorio = gerarCPF();
@@ -9,76 +23,108 @@ const cepAleatorio = gerarCep();
 const RGAleatorio = gerarRG();
 const CNPJAleatorio = gerarCNPJ();
 
-const { CANDIDATO } = require('../../config/configSpec');
+const { CANDIDATO } = require("../../config/configSpec");
 const candidato = CANDIDATO();
 const IdadeCandidato = candidato.idade;
 const SexoCandidato = candidato.sexo;
-const NacionalidadeCandidato = candidato.nacionalidade; 
+const NacionalidadeCandidato = candidato.nacionalidade;
 
-describe('Varredura de campos', () => {
-    before(() => {
-        if (IdadeCandidato == "+") {
-            dataNascimento = gerarDataNascimentoMaior();
-        }
-        if (IdadeCandidato == "-") {
-            dataNascimento = gerarDataNascimentoMenor();
-        }
-    });
-    
-    it('Leitura e preenchimento dos campos do primeiro passo da inscrição', () => {
-        cy.document().then((doc) => {
-            const labels = [
-                { text: 'Nome completo *', value: nomeCompletoAleatorio },
-                { text: 'E-mail *', value: emailAleatorio },
-                { text: 'Celular *', value: celularAleatorio },
-                { text: 'CPF *', value: CPFAleatorio },
-                { text: 'Data de nascimento *', value: dataNascimento }
-            ];
+describe("Primeiro passo da inscrição", () => {
+  it("Valida a política de privacidade", () => {
+    cy.contains("strong", "Política de Privacidade")
+      .closest("a")
+      .should("have.attr", "href")
+      .and("not.eq", "https://rbacademy.apprbs.com.br/politica-de-privacidade");
+  });
 
-            labels.forEach(labelObj => {
-                const label = Array.from(doc.querySelectorAll('label')).find(el => el.textContent.includes(labelObj.text));
-                if (label) {
-                    cy.wrap(label).parent().find('input').filter(':visible').first().then(input => {
-                        cy.wrap(input).type(labelObj.value);
-                    });
-                } else {
-                    cy.log(`O label "${labelObj.text}" não existe no DOM`);
-                }
+  before(() => {
+    if (IdadeCandidato == "+") {
+      dataNascimento = gerarDataNascimentoMaior();
+    }
+    if (IdadeCandidato == "-") {
+      dataNascimento = gerarDataNascimentoMenor();
+    }
+  });
+
+  it("Leitura e preenchimento dos campos do primeiro passo da inscrição", () => {
+    cy.document().then((doc) => {
+      const labels = [
+        { text: "Nome completo *", value: nomeCompletoAleatorio },
+        { text: "E-mail *", value: emailAleatorio },
+        { text: "Celular *", value: celularAleatorio },
+        { text: "CPF *", value: CPFAleatorio },
+        { text: "Data de nascimento *", value: dataNascimento },
+      ];
+
+      labels.forEach((labelObj) => {
+        const label = Array.from(doc.querySelectorAll("label")).find((el) =>
+          el.textContent.includes(labelObj.text)
+        );
+        if (label) {
+          cy.wrap(label)
+            .parent()
+            .find("input")
+            .filter(":visible")
+            .first()
+            .then((input) => {
+              cy.wrap(input).type(labelObj.value);
             });
+        } else {
+          cy.log(`O label "${labelObj.text}" não existe no DOM`);
+        }
+      });
+    });
+  });
+
+  it("Marcação dos campos radio e checkbox", () => {
+    cy.get("body").then(($body) => {
+      if (
+        $body.find(`input[type="radio"][value="${SexoCandidato}"]`).length > 0
+      ) {
+        cy.get(`input[type="radio"][value="${SexoCandidato}"]`, { log: false })
+          .should("be.visible")
+          .check({ force: true });
+      }
+
+      if (
+        $body.find(`input[type="radio"][value="${NacionalidadeCandidato}"]`)
+          .length > 0
+      ) {
+        cy.get(`input[type="radio"][value="${NacionalidadeCandidato}"]`, {
+          log: false,
+        })
+          .should("be.visible")
+          .check({ force: true });
+      }
+    });
+
+    cy.get('input[type="checkbox"]')
+      .eq(1)
+      .should("be.visible")
+      .check({ force: true });
+  });
+
+  it("Exibição de campos ocultos do primeiro passo da inscrição", () => {
+    cy.window().then((win) => {
+      let i = 0;
+      while (i < 10) {
+        Array.from(
+          win.document.getElementsByClassName("fields-hidden")
+        ).forEach((e) => {
+          e.classList.remove("fields-hidden");
         });
-    });
-
-    it('Marcação dos campos radio e checkbox', () => {
-        cy.get('body').then($body => {
-            if ($body.find(`input[type="radio"][value="${SexoCandidato}"]`).length > 0) {
-                cy.get(`input[type="radio"][value="${SexoCandidato}"]`, { log: false }).should('be.visible').check({ force: true });
-            }
-
-            if ($body.find(`input[type="radio"][value="${NacionalidadeCandidato}"]`).length > 0) {
-                cy.get(`input[type="radio"][value="${NacionalidadeCandidato}"]`, { log: false }).should('be.visible').check({ force: true });
-            }
+        Array.from(
+          win.document.getElementsByClassName("ps-input-hidden")
+        ).forEach((e) => {
+          e.classList.remove("ps-input-hidden");
         });
 
-        cy.get('input[type="checkbox"]').eq(1).should('be.visible').check({ force: true })
+        i++;
+      }
     });
+  });
 
-    it('Exibição de campos ocultos do primeiro passo da inscrição', () => {
-        cy.window().then((win) => {
-            let i = 0;
-            while (i < 10) {
-                Array.from(win.document.getElementsByClassName('fields-hidden')).forEach((e) => {
-                    e.classList.remove('fields-hidden');
-                });
-                Array.from(win.document.getElementsByClassName('ps-input-hidden')).forEach((e) => {
-                    e.classList.remove('ps-input-hidden');
-                });
-
-                i++;
-            }
-        });
-    });
-
-    it('Conclusão do primeiro passo da inscrição', () => {
-        // cy.get('button').contains('Avançar').click();
-    });
+  it("Conclusão do primeiro passo da inscrição", () => {
+    cy.contains("Button", "Avançar").should("be.visible").click();
+  });
 });

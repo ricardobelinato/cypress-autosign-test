@@ -7,5 +7,6 @@ module.exports = defineConfig({
     },
     testIsolation: false,
     experimentalSessionAndOrigin: true,
+    experimentalModifyObstructiveThirdPartyCode: true,
   },
 });

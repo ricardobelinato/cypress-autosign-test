@@ -60,7 +60,7 @@ function gerarDataNascimentoMenor() {
 }
 
 function gerarCep(){
-    const cepAleatorio = ceps[Math.floor(Math.random() * ceps.length)];
+    const cepAleatorio = ceps[Math.floor(Math.random() * ceps.lenght)];
     return cepAleatorio;
 }
 
