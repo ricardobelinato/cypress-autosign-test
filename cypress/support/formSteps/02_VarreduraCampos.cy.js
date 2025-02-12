@@ -25,7 +25,7 @@ const CNPJAleatorio = gerarCNPJ();
 
 const { CANDIDATO } = require("../../config/configSpec");
 const candidato = CANDIDATO();
-const IdadeCandidato = candidato.idade;
+const maioridadeCandidato = candidato.maioridade;
 const SexoCandidato = candidato.sexo;
 const NacionalidadeCandidato = candidato.nacionalidade;
 
@@ -33,15 +33,16 @@ describe("Primeiro passo da inscrição", () => {
   it("Valida a política de privacidade", () => {
     cy.contains("strong", "Política de Privacidade")
       .closest("a")
-      .should("have.attr", "href")
-      .and("not.eq", "https://rbacademy.apprbs.com.br/politica-de-privacidade");
+      .invoke("attr", "href")
+      .then((href) => {
+        expect(href).to.not.eq("https://rbacademy.apprbs.com.br/politica-de-privacidade");
+      });
   });
-
+  
   before(() => {
-    if (IdadeCandidato == "+") {
+    if (maioridadeCandidato) {
       dataNascimento = gerarDataNascimentoMaior();
-    }
-    if (IdadeCandidato == "-") {
+    } else {
       dataNascimento = gerarDataNascimentoMenor();
     }
   });
@@ -122,6 +123,13 @@ describe("Primeiro passo da inscrição", () => {
         i++;
       }
     });
+  });
+
+  beforeEach(() => {
+    cy.intercept({
+      method: "POST",
+      pathname: "/api/applyment/getApplymentDataByStep/*",
+    }).as("applymentLoading");
   });
 
   it("Conclusão do primeiro passo da inscrição", () => {

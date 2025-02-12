@@ -24,6 +24,7 @@ function gerarCelular() {
 let create_array = (total, numero) => Array.from(Array(total), () => number_random(numero));
 let number_random = (number) => Math.round(Math.random() * number);
 let mod = (dividendo, divisor) => Math.round(dividendo - Math.floor(dividendo / divisor) * divisor);
+
 function gerarCPF() {
     let total_array = 9;
     let n = 9;
@@ -36,7 +37,11 @@ function gerarCPF() {
     let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;
     d2 = 11 - (mod(d2, 11));
     if (d2 >= 10) d2 = 0;
-    return n1 + '' + n2 + '' + n3 + '' + n4 + '' + n5 + '' + n6 + '' + n7 + '' + n8 + '' + n9 + '' + d1 + '' + d2;
+
+    let cpfNumerico = `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;
+    let cpfFormatado = `${cpfNumerico.slice(0, 3)}.${cpfNumerico.slice(3, 6)}.${cpfNumerico.slice(6, 9)}-${cpfNumerico.slice(9, 11)}`;
+
+    return cpfNumerico;
 }
 
 function gerarDataNascimentoMaior() {

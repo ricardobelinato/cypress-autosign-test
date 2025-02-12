@@ -8,10 +8,11 @@ Sua principal intenção é rodar testes para validar a funcionalidade e estabil
 
 ## 🎯Funcionalidades
 > 1. Geração automática de dados aleatórios de candidatos <br>
-> 2. Possíbilidade de personalização desses dados, gerando candidatos maiores ou menores de idade, de ambos os sexos e de diferentes nacionalidades <br>
+> 2. Possíbilidade de personalização desses dados, gerando candidatos maiores ou menores de idade, de ambos os sexos, de diferentes nacionalidades, com ou sem deficiência <br>
 > 3. Suporte para diferentes formatos e configurações de fichas <br>
-> 4. Execução de testes end-to-end em ambientes integrados ao RM TOTVS.
-> 5. Relatórios automáticos de execução dos testes.
+> 4. Execução de testes end-to-end em ambientes integrados ao RM TOTVS. <br>
+> 5. Relatórios automáticos de execução dos testes. <br>
+> 6. Possibilidade de rodar e parametrizar os testes via terminal.
 
 <br>
 
@@ -35,17 +36,18 @@ npm install
 ```js
 function CONFIG() {
     return {
-        url: "",          // URL da ficha de inscrição
-        ps: 0,            // Código do processo seletivo
+        url: "",            // URL da ficha de inscrição
+        ps: 0,              // Código do processo seletivo
     };
 }
 
-function CANDIDATO() {
+function CANDIDATO(){
     return {
-        idade: "-",        // Use '+' para maior ou igual a 18 anos, ou '-' para menor de 18 anos
-        sexo: "M",         // 'M' para masculino ou 'F' para feminino
-        nacionalidade: "0" // '0' para brasileiro ou '1' para estrangeiro
-    };
+        sexo: "M",          //'M' para masculino ou 'F' para feminino 
+        nacionalidade: "0", //'0' para brasileiro ou '1' para estrangeiro
+        maioridade: true,
+        deficiencia: false,
+    }
 }
 ```
 
@@ -66,7 +68,9 @@ npx cypress open
       └── support/                                      # Scripts de suporte e lógica principal
             ├── formSteps/                              # Scripts específicos para cada passo da ficha de inscrição
                   ├── 01_EscolhaDePS.cy.js              # Script para a escolha do processo seletivo.
-                  └── 02_VarreduraCampos.cy.js          # Script para leitura e preenchimento dinâmico dos campos.
+                  ├── 02_VarreduraCampos.cy.js          # Script para leitura e preenchimento dinâmico dos campos.
+                  └── 03_EscolhaDeCurso.cy.js           # Script para a escolha de oferta, modalidade e local de oferta.
             └── dataGenerator.js                        # Script com funções para geração de dados fictícios
     cypress.config.js                                   # Configurações globais do Cypress
+    run-tests.mjs                                       # Script pra rodar os testes via terminal por inquirer
 </pre>

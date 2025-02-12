@@ -1,7 +1,6 @@
 import inquirer from "inquirer";
 
 async function start() {
-//   console.log("\n");
   console.log("\nBem-vindo ao Cypress AutoSign Project! 🛠️");
   console.log("Vamos configurar os parâmetros do seu teste\n");
 
@@ -31,34 +30,48 @@ async function start() {
       default: false,
     },
     {
-      type: "input",
-      name: "idadeCandidato",
+      type: "list",
+      name: "maioridadeCandidato",
       message: "Gerar candidato maior ou menor de idade?",
-      default: false,
+      choices: ["Maior", "Menor"],
+      default: "Maior",
       when: (answers) => answers.escolherParametrosCandidato,
     },
     {
-      type: "input",
+      type: "list",
       name: "sexoCandidato",
-      message: "Gerar candidato de sexo M ou F? (m/f)",
-      default: "m",
+      message: "Gerar candidato do sexo",
+      choices: ["Masculino", "Feminino"],
+      default: "Masculino",
       when: (answers) => answers.escolherParametrosCandidato,
     },
     {
-      type: "input",
+      type: "list",
       name: "nacionalidadeCandidato",
-      message: "Gerar candidato de nacionalidade brasileira (s/n)?",
-      default: "s",
+      message: "Gerar candidato de nacionalidade",
+      choices: ["Brasileira", "Estrangeiro"],
+      default: "Brasileira",
       when: (answers) => answers.escolherParametrosCandidato,
     },
   ]);
 
-  const urlBase = answers.urlBase;
-  const processoSeletivo = answers.ps;
-  const configurarCandidato = answers.escolherParametrosCandidato;
-  const idadeCandidato = answers.idadeCandidato;
-  const sexoCandidato = answers.sexoCandidato;
-  const nacionalidadeCandidato = answers.nacionalidadeCandidato;
 }
+
+function CONFIG(urlBase, processoSeletivo) {
+  return {
+    url: urlBase,
+    ps: processoSeletivo,
+  };
+}
+
+function CANDIDATO(maioridadeCandidato, sexoCandidato, nacionalidadeCandidato) {
+  return {
+    maioridade: maioridadeCandidato,
+    sexo: sexoCandidato,
+    nacionalidade: nacionalidadeCandidato,
+  };
+}
+
+export { CONFIG, CANDIDATO };
 
 start();
