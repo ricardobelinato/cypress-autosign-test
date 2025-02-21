@@ -1,8 +1,9 @@
 node_modules/
+cypress/config/configSpec.js
 cypress/downloads/
 cypress/e2e/
-cypress/screenshots/
 !cypress/e2e/ExampleSpec.cy.js
+cypress/fixtures/
+cypress/screenshots/
 backlog.md
-cypress/support/tracking.service.ts
-cypress/config/configSpec.js
+cypress/config/config-guide.md

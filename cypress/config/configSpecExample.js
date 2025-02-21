@@ -1,17 +1,29 @@
 function CONFIG(){
     return {
-        url: "",
+        url: '',
         ps: 0,
+        exibirCamposOcultos: false
     };
 }
 
 function CANDIDATO(){
     return {
-        sexo: "M", //'M' para masculino ou 'F' para feminino 
-        nacionalidade: "0", //'0' para brasileiro ou '1' para estrangeiro
+        sexo: 'M',
+        nacionalidade: '0',
         maioridade: true,
         deficiencia: false,
     }
 }
 
-module.exports = {CONFIG, CANDIDATO}
+function LIGHTHOUSEAUDIT() {
+    return {
+        logLevel: 'info',
+        output: 'json',
+        onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'],
+        throttlingMethod: 'simulate',
+        emulatedFormFactor: 'desktop',
+        disableStorageReset: false
+    }
+}
+
+module.exports = {CONFIG, CANDIDATO, LIGHTHOUSEAUDIT}
