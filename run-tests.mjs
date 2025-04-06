@@ -1,4 +1,25 @@
 import inquirer from "inquirer";
+import { spawn } from "child_process";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename).replace(/\\/g, "/");
+
+function CONFIG(urlBase, processoSeletivo) {
+  return {
+    url: urlBase,
+    ps: processoSeletivo,
+  };
+}
+
+function CANDIDATO(maioridadeCandidato, sexoCandidato, nacionalidadeCandidato) {
+  return {
+    maioridade: maioridadeCandidato,
+    sexo: sexoCandidato,
+    nacionalidade: nacionalidadeCandidato,
+  };
+}
 
 async function start() {
   console.log("\nBem-vindo ao Cypress AutoSign Project! 🛠️");
@@ -55,23 +76,42 @@ async function start() {
     },
   ]);
 
-}
+  const config = CONFIG(answers.urlBase, answers.ps);
+  const candidato = answers.escolherParametrosCandidato
+    ? CANDIDATO(
+        answers.maioridadeCandidato,
+        answers.sexoCandidato,
+        answers.nacionalidadeCandidato
+      )
+    : null;
 
-function CONFIG(urlBase, processoSeletivo) {
-  return {
-    url: urlBase,
-    ps: processoSeletivo,
-  };
-}
+  console.log("\n🔧 Configuração:");
+  console.log("Config:", config);
+  if (candidato) console.log("Candidato:", candidato);
 
-function CANDIDATO(maioridadeCandidato, sexoCandidato, nacionalidadeCandidato) {
-  return {
-    maioridade: maioridadeCandidato,
-    sexo: sexoCandidato,
-    nacionalidade: nacionalidadeCandidato,
-  };
-}
+  const specPath = `${__dirname}/cypress/e2e/TesteSpec.cy.js`;
+  console.log(`\n🚀 Executando: npx cypress run --spec ${specPath}`);
 
-export { CONFIG, CANDIDATO };
+  const processo = spawn("npx", ["cypress", "run", "--spec", `"${specPath}"`], {
+    shell: true,
+    cwd: __dirname,
+  });
+
+  processo.stdout.on("data", (data) => {
+    process.stdout.write(data.toString());
+  });
+
+  processo.stderr.on("data", (data) => {
+    process.stderr.write(data.toString());
+  });
+
+  processo.on("close", (code) => {
+    if (code !== 0) {
+      console.error(`\n❌ Cypress finalizou com código de erro: ${code}`);
+    } else {
+      console.log("\n✅ Cypress finalizado com sucesso!");
+    }
+  });
+}
 
 start();

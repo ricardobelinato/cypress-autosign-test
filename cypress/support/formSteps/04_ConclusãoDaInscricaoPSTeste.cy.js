@@ -91,7 +91,7 @@ describe("Terceiro passo da inscrição", () => {
     });
   });
 
-  if (config.exibirCamposOcultos) {    
+  if (config.validarCamposOcultos) {    
     it("Exibição de campos ocultos do terceiro passo da inscrição", () => {
       cy.wait(1000)
       cy.window().then((win) => {

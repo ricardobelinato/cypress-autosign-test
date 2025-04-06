@@ -30,14 +30,16 @@ const SexoCandidato = candidato.sexo;
 const NacionalidadeCandidato = candidato.nacionalidade;
 
 describe("Primeiro passo da inscrição", () => {
-  // it("Valida a política de privacidade", () => {
-  //   cy.contains("strong", "Política de Privacidade")
-  //     .closest("a")
-  //     .invoke("attr", "href")
-  //     .then((href) => {
-  //       expect(href).to.not.eq("https://rbacademy.apprbs.com.br/politica-de-privacidade");
-  //     });
-  // });
+  if (config.validarPoliticaPrivacidade) {
+    it("Valida a política de privacidade", () => {
+      cy.contains("strong", "Política de Privacidade")
+        .closest("a")
+        .invoke("attr", "href")
+        .then((href) => {
+          expect(href).to.not.eq("https://rbacademy.apprbs.com.br/politica-de-privacidade");
+        });
+    });
+  }
   
   before(() => {
     if (maioridadeCandidato) {
@@ -49,7 +51,6 @@ describe("Primeiro passo da inscrição", () => {
 
   it("Leitura e preenchimento dos campos do primeiro passo da inscrição", () => {
 
-    // Excluir
     cy.wait(1000)
 
     cy.document().then((doc) => {
@@ -81,7 +82,6 @@ describe("Primeiro passo da inscrição", () => {
     });
   });
 
-  // Aqui preciso lançar melhoria de verificar se existem esses campos antes de tentar preenche-los
   it("Marcação dos campos radio e checkbox", () => {
     cy.get("body").then(($body) => {
       if (
@@ -104,15 +104,22 @@ describe("Primeiro passo da inscrição", () => {
       }
     });
 
-    cy.contains("strong", "Política de Privacidade")
-      .parents("div.form-group")
-      .find('input[type="checkbox"]')
-      .should("be.visible")
-      .check({ force: true }
-    );
+    cy.get("strong", { log: false }).then(($elements) => {
+      const $PoliticaPrivacidade = $elements.filter((_, el) => el.innerText.includes("Política de Privacidade"));
+    
+      if ($PoliticaPrivacidade.length > 0) {
+        cy.wrap($PoliticaPrivacidade)
+          .parents("div.form-group")
+          .find('input[type="checkbox"]')
+          .should("be.visible")
+          .check({ force: true });
+      } else {
+        cy.log("Política de Privacidade não encontrada, seguindo o fluxo normalmente.");
+      }
+    });
   });
 
-  if (config.exibirCamposOcultos) {    
+  if (config.validarCamposOcultos) {    
     it("Exibição de campos ocultos do primeiro passo da inscrição", () => {
       cy.window().then((win) => {
         let i = 0;

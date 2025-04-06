@@ -1,6 +1,8 @@
 import {
   gerarNomeESobrenome,
   gerarNomeCompleto,
+  gerarEmail,
+  gerarCelular,
   gerarCPF,
   gerarDataNascimentoMaior,
   gerarDataNascimentoMenor,
@@ -12,6 +14,8 @@ const nomeCompletoAleatorio = gerarNomeCompleto(
   sobrenomeAleatorio
 );
 
+const emailAleatorio = gerarEmail(nomeAleatorio, sobrenomeAleatorio);
+const celularAleatorio = gerarCelular();
 const CPFAleatorio = gerarCPF();
 let dataNascimento;
 const { CANDIDATO, CONFIG } = require("../../config/configSpec");
@@ -36,80 +40,108 @@ describe("Segundo passo da inscrição", () => {
   });
 
   it("Leitura e preenchimento dos campos do segundo passo da inscrição", () => {
+    Cypress.on("uncaught:exception", (err, runnable) => {
+      return false;
+    });
+    
     cy.wait("@applymentLoading");
-    cy.wait(1000);
+    cy.wait(2000);
 
-    // cy.contains("div", /Modalidade *|Curso */).then(($div) => {
-    // cy.contains("div", 'Modalidade *').then(($div) => {
-    //   if ($div.length > 0) {
-    //     cy.wrap($div)
-    //       .parent()
-    //       .find("input")
-    //       .should("exist")
-    //       .and("be.visible")
-    //       .click();
-    //   } else {
-    //     cy.log("A div 'Modalidade *' ou 'Curso *' não existe na página.");
-    //   }
-    // });
+    cy.get('div', { log: false }).then(($elements) => {
+      const $Modalidade = $elements.filter((_, el) => el.innerText.includes('Modalidade *'));
+      const $Curso = $elements.filter((_, el) => el.innerText.includes('Curso *'));
+      const $Serie = $elements.filter((_, el) => el.innerText.includes('Série *'));
 
-    // cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
-    //   .should("be.visible")
-    //   .find("span.ps-auto-complete-option-item")
-    //   .first()
-    //   .should("be.visible")
-    //   .click();
-
-    // Excluir
-    cy.contains("div", 'Curso *').then(($div) => {
-      if ($div.length > 0) {
-        cy.wrap($div)
+      if ($Modalidade.length > 0) {
+        cy.wrap($Modalidade[$Modalidade.length-2])
+          .should("exist")
           .parent()
           .find("input")
           .should("exist")
           .and("be.visible")
           .click();
+        cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
+          .should("be.visible")
+          .find("span.ps-auto-complete-option-item")
+          .first()
+          .should("be.visible")
+          .click();
       } else {
-        cy.log("A div 'Modalidade *' ou 'Curso *' não existe na página.");
+        cy.log("A div 'Modalidade *' não existe na página.");
+      }
+
+      if ($Curso.length > 0) {
+        cy.wrap($Curso[$Curso.length-2])
+          .should('exist')
+          .and('be.visible')
+          .parent()
+          .find("input")
+          .should('exist')
+          .and('be.visible')
+          .click();
+        cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
+          .should("be.visible")
+          .find("span.ps-auto-complete-option-item")
+          // .first()
+          .eq(3)
+          .should("be.visible")
+          .click();
+      } else {
+        cy.log("A div 'Curso *' não existe na página.");
+      }
+
+      if ($Serie.length > 0) {
+        cy.wrap($Serie[$Serie.length-2])
+          .should("exist")
+          .and("be.visible")
+          .parent()
+          .find("input")
+          .should("exist")
+          .and("be.visible")
+          .click();
+        cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
+          .should("be.visible")
+          .find("span.ps-auto-complete-option-item")
+          // .and("be.visible")
+          .eq(2)
+          .click({force: true});
+      } else {
+        cy.log("A div 'Série *' não existe na página.");
       }
     });
+    //   const $Serie = $elements.filter((_, el) => el.innerText.includes('Série *'));
 
-    cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
-      .should("be.visible")
-      .find("span.ps-auto-complete-option-item")
-      .first()
-      .should("be.visible")
-      .click();
-    
-    cy.wait(1000);
-
-    // cy.contains("div", 'Série *').then(($div) => {
-    //   if ($div.length > 0) {
-    //     cy.wrap($div)
+    //   if ($Serie.length > 0) {
+    //     cy.wrap($Serie)
     //       .parent()
     //       .find("input")
     //       .should("exist")
     //       .and("be.visible")
     //       .click();
+    //     cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
+    //       .should("be.visible")
+    //       .find("span.ps-auto-complete-option-item")
+    //       // .and("be.visible")
+    //       .eq(2)
+    //       .click({force: true});
     //   } else {
     //     cy.log("A div 'Série *' não existe na página.");
     //   }
     // });
-
-    // cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
-    //   .should("be.visible")
-    //   .find("span.ps-auto-complete-option-item")
-    //   // .and("be.visible")
-    //   .eq(2)
-    //   .click({force: true});
     
     cy.wait(1000);
 
-    // Aqui precisa verificar se existe esse campo sem dar erro
-    // cy.contains('label', 'Data de nascimento *').should('be.visible').parent().find('input').eq(1).type(dataNascimento + "{enter}", { force: true });
+    cy.contains('label', 'Data de nascimento *').then(($dataNasc) => {
+      if ($dataNasc.length > 0) {
+        cy.wrap($dataNasc).should('be.visible').parent().find('input').eq(1).type(dataNascimento + "{enter}", { force: true });
+      }
+    })
   
     cy.document().then((doc) => {
       const labels = [
+        { text: "Nome completo *", value: nomeCompletoAleatorio },
+        { text: "E-mail *", value: emailAleatorio },
+        { text: "Celular *", value: celularAleatorio },
         { text: "Nome completo do estudante *", value: nomeCompletoAleatorio },
         { text: "CPF *", value: CPFAleatorio },
         { text: "Média de notas do ENEM *", value: '900' },
@@ -151,7 +183,7 @@ describe("Segundo passo da inscrição", () => {
     }
   });
 
-  if (config.exibirCamposOcultos) {    
+  if (config.validarCamposOcultos) {    
     it("Exibição de campos ocultos do segundo passo da inscrição", () => {
       cy.wait(1000)
       cy.window().then((win) => {

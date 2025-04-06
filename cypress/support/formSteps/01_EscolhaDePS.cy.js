@@ -50,6 +50,6 @@ describe('Escolha de PS', () => {
       }
     });
 
-    cy.wait('@applymentLoading');
+    cy.wait('@applymentLoading', { timeout: 10000 });
   });
 });
