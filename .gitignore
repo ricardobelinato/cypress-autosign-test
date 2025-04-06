@@ -1,9 +1,20 @@
+# Dependências
 node_modules/
-cypress/config/configSpec.js
+
+# Saídas de execução / testes
 cypress/downloads/
-cypress/e2e/
-!cypress/e2e/ExampleSpec.cy.js
-cypress/fixtures/
 cypress/screenshots/
+
+# Arquivos sensíveis ou específicos do dev
+cypress/config/configSpec.*
+cypress/config/notes.md
 backlog.md
+
+# Ignora todos os testes, exceto arquivos de exemplo
+cypress/e2e/
+!cypress/e2e/ExampleSpec.*
+
+# Dados de mock
+cypress/fixtures/
+
 cypress/config/config-guide.md

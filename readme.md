@@ -32,23 +32,35 @@ git clone https://github.com/ricardobelinato/cypress_autosign
 npm install
 ```
 
-3. Renomeie o arquivo configSpecExample.js, localizado na pasta cypress/config/, removendo o sufixo Example do nome para transformá-lo em configSpec.js. Em seguida, configure o arquivo preenchendo as variáveis necessárias conforme o exemplo abaixo:
-```js
-function CONFIG() {
+3. Renomeie o arquivo configSpecExample.ts, localizado na pasta cypress/config/, removendo o sufixo Example do nome para transformá-lo em configSpec.ts. Em seguida, configure o arquivo preenchendo as variáveis necessárias conforme o exemplo abaixo:
+```ts
+export function CONFIG(): Config {
     return {
-        url: "",            // URL da ficha de inscrição
-        ps: 0,              // Código do processo seletivo
+        url: '',
+        ps: 0,
+        validarCamposOcultos: false
     };
-}
+};
 
-function CANDIDATO(){
+export function CANDIDATO(): Candidato {
     return {
-        sexo: "M",          //'M' para masculino ou 'F' para feminino 
-        nacionalidade: "0", //'0' para brasileiro ou '1' para estrangeiro
+        sexo: 'M',
+        nacionalidade: '0',
         maioridade: true,
         deficiencia: false,
     }
-}
+};
+
+export function LIGHTHOUSEAUDIT(): LighthouseAudit {
+    return {
+        logLevel: 'info',
+        output: 'json',
+        onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'],
+        throttlingMethod: 'simulate',
+        emulatedFormFactor: 'desktop',
+        disableStorageReset: false
+    }
+};
 ```
 
 4. Execute os testes com Cypress:
@@ -63,14 +75,20 @@ npx cypress open
 ## 📂 Estrutura do Projeto
 <pre>
     cypress/
-      ├── config/                                       # Configurações internas, incluindo parâmetros da ficha e geração de candidatos fictícios
+      ├── config/
+            └── configSpecExample.ts                    # Arquivo de configurações internas, parâmetros da ficha e de candidatos fictícios
       ├── e2e/                                          # Testes end-to-end. Arquivo principal executável individual por ficha
+            └── ExampleSpec.cy.ts                       # Exemplo de teste para a ficha
       └── support/                                      # Scripts de suporte e lógica principal
             ├── formSteps/                              # Scripts específicos para cada passo da ficha de inscrição
-                  ├── 01_EscolhaDePS.cy.js              # Script para a escolha do processo seletivo.
-                  ├── 02_VarreduraCampos.cy.js          # Script para leitura e preenchimento dinâmico dos campos.
-                  └── 03_EscolhaDeCurso.cy.js           # Script para a escolha de oferta, modalidade e local de oferta.
-            └── dataGenerator.js                        # Script com funções para geração de dados fictícios
+                  ├── selectProcess.cy.ts
+                  ├── dynamicFields.cy.ts
+                  ├── selectCouseOptions.cy.ts
+                  └── submitEnrollment.cy.ts
+            └── utils/
+                  ├── dataGenerator.ts                  # Script com funções para geração de dados fictícios
+                  ├── lighthouseAudit.ts                # Executa auditorias de performance com Lighthouse durante os testes
+                  └── formHelpers.ts                    # Contém utilitários para interação e manipulação de formulários nos testes
     cypress.config.js                                   # Configurações globais do Cypress
     run-tests.mjs                                       # Script pra rodar os testes via terminal por inquirer
 </pre>

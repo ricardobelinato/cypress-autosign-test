@@ -1,3 +1,6 @@
-require('../support/formSteps/01_EscolhaDePS.cy');
-require('../support/formSteps/02_VarreduraCampos.cy');
-require('../support/formSteps/03_EscolhaDeCurso.cy');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("../support/formSteps/selectProcess.cy");
+require("../support/formSteps/dynamicFields.cy");
+require("../support/formSteps/selectCourseOptions.cy");
+require("../support/formSteps/submitEnrollment.cy");

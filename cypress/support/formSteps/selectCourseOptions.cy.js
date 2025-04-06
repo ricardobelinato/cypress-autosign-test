@@ -6,7 +6,7 @@ import {
   gerarCPF,
   gerarDataNascimentoMaior,
   gerarDataNascimentoMenor,
-} from "../dataGenerator";
+} from "../utils/dataGenerator";
 
 const { nomeAleatorio, sobrenomeAleatorio } = gerarNomeESobrenome();
 const nomeCompletoAleatorio = gerarNomeCompleto(

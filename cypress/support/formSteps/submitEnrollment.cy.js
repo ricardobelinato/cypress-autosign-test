@@ -2,7 +2,7 @@ import {
   gerarCPF,
   gerarDataNascimentoMaior,
   gerarDataNascimentoMenor,
-} from "../dataGenerator";
+} from "../utils/dataGenerator";
 
 const CPFAleatorio = gerarCPF();
 let dataNascimento;

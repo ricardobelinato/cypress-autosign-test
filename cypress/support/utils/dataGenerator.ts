@@ -1,34 +1,46 @@
-export { gerarNomeESobrenome, gerarNomeCompleto, gerarEmail, gerarCelular, gerarCPF, gerarDataNascimentoMaior, gerarDataNascimentoMenor, gerarCep, gerarRG, gerarCNPJ};
+export type NomeESobrenome = {
+    nomeAleatorio: string;
+    sobrenomeAleatorio: string;
+};
 
-function gerarNomeESobrenome() {
+export function gerarNomeESobrenome(): NomeESobrenome {
     const nomeAleatorio = nomes[Math.floor(Math.random() * nomes.length)];
     const sobrenomeAleatorio = sobrenomes[Math.floor(Math.random() * sobrenomes.length)];
     return {nomeAleatorio, sobrenomeAleatorio};
-}
+};
 
-function gerarNomeCompleto(nomeAleatorio, sobrenomeAleatorio) {
-    return nomeAleatorio + ' ' + sobrenomeAleatorio + ' ' + 'Teste Rubeus';
-}
+export function gerarNomeCompleto({nomeAleatorio, sobrenomeAleatorio}: NomeESobrenome): string {
+    return `${nomeAleatorio} ${sobrenomeAleatorio} Teste Rubeus`;
+};
 
-function gerarEmail(nomeAleatorio, sobrenomeAleatorio) {
-    const emailAleatorio = nomeAleatorio.normalize("NFD").replace(/[^a-zA-Z\s]/g, "").toLowerCase() + sobrenomeAleatorio.normalize("NFD").replace(/[^a-zA-Z\s]/g, "").toLowerCase() + 'testerubeus@rubeusteste.com.br';
-    return emailAleatorio;
-}
+export function normalizarTexto(texto: string): string {
+    if (typeof texto !== "string") return "";
+    return texto.normalize("NFD").replace(/[^a-zA-Z]/g, "").toLowerCase();
+};
 
-function gerarCelular() {
+export function gerarEmail({nomeAleatorio, sobrenomeAleatorio}: NomeESobrenome): string {
+    const nome = normalizarTexto(nomeAleatorio);
+    const sobrenome = normalizarTexto(sobrenomeAleatorio);
+    return `${nome}.${sobrenome}.testerubeus@rubeusteste.com.br`;
+};
+
+export function gerarCelular(): string {
     const prefixo = Math.floor(Math.random() * 9000) + 1000;
     const sufixo = Math.floor(Math.random() * 9000) + 1000;
     return `329${prefixo}${sufixo}`;
-}
+};
 
-let create_array = (total, numero) => Array.from(Array(total), () => number_random(numero));
-let number_random = (number) => Math.round(Math.random() * number);
-let mod = (dividendo, divisor) => Math.round(dividendo - Math.floor(dividendo / divisor) * divisor);
+const number_random = (max: number): number =>
+    Math.round(Math.random() * max);
+const create_array = (total: number, max: number): number[] =>
+    Array.from({ length: total }, () => number_random(max));
+const mod = (dividendo: number, divisor:number): number =>
+    Math.round(dividendo - Math.floor(dividendo / divisor) * divisor);
 
-function gerarCPF() {
-    let total_array = 9;
-    let n = 9;
-    let [n1, n2, n3, n4, n5, n6, n7, n8, n9] = create_array(total_array, n);
+export function gerarCPF(): string {
+    const totalArray = 9;
+    const maxNumero = 9;
+    const [n1, n2, n3, n4, n5, n6, n7, n8, n9] = create_array(totalArray, maxNumero);
 
     let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
     d1 = 11 - (mod(d1, 11));
@@ -38,48 +50,60 @@ function gerarCPF() {
     d2 = 11 - (mod(d2, 11));
     if (d2 >= 10) d2 = 0;
 
-    let cpfNumerico = `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;
-    let cpfFormatado = `${cpfNumerico.slice(0, 3)}.${cpfNumerico.slice(3, 6)}.${cpfNumerico.slice(6, 9)}-${cpfNumerico.slice(9, 11)}`;
+    const cpfNumerico = `${n1}${n2}${n3}${n4}${n5}${n6}${n7}${n8}${n9}${d1}${d2}`;
+    const cpfFormatado = `${cpfNumerico.slice(0, 3)}.${cpfNumerico.slice(3, 6)}.${cpfNumerico.slice(6, 9)}-${cpfNumerico.slice(9, 11)}`;
 
     return cpfNumerico;
-}
+};
 
-function gerarDataNascimentoMaior() {
-    const anoAtual = new Date().getFullYear();
+export function gerarDataNascimentoMaior(): string {
+    const hoje = new Date();
+    const anoAtual = hoje.getFullYear();
+
     const idadeMinima = 18;
     const idadeMaxima = 50;
-    const idadeAleatoria = Math.floor(Math.random() * (idadeMaxima - idadeMinima + 1)) + idadeMinima;
-    const anoNascimento = anoAtual - idadeAleatoria;
-    const dataNascimento = new Date(anoNascimento, Math.floor(Math.random() * 12), Math.floor(Math.random() * 31) + 1);
-    return dataNascimento.toLocaleDateString();
-}
 
-function gerarDataNascimentoMenor() {
-    const anoAtual = new Date().getFullYear();
+    const dataFinal = new Date(anoAtual - idadeMinima, hoje.getMonth(), hoje.getDate());
+    const dataInicial = new Date(anoAtual - idadeMaxima, hoje.getMonth(), hoje.getDate());
+
+    const timestampAleatorio = Math.floor(Math.random() * (dataFinal.getTime() - dataInicial.getTime())) + dataInicial.getTime();
+
+    const dataNascimento = new Date(timestampAleatorio);
+    return dataNascimento.toLocaleDateString('pt-BR');
+};
+
+export function gerarDataNascimentoMenor(): string {
+    const hoje = new Date();
+    const anoAtual = hoje.getFullYear();
+
     const idadeMinima = 1;
     const idadeMaxima = 17;
-    const idadeAleatoria = Math.floor(Math.random() * (idadeMaxima - idadeMinima + 1)) + idadeMinima;
-    const anoNascimento = anoAtual - idadeAleatoria;
-    const dataNascimento = new Date(anoNascimento, Math.floor(Math.random() * 12), Math.floor(Math.random() * 31) + 1);
-    return dataNascimento.toLocaleDateString();
+
+    const dataFinal = new Date(anoAtual - idadeMinima, hoje.getMonth(), hoje.getDate());
+    const dataInicial = new Date(anoAtual - idadeMaxima, hoje.getMonth(), hoje.getDate());
+
+    const timestampAleatorio = Math.floor(Math.random() * (dataFinal.getTime() - dataInicial.getTime())) + dataInicial.getTime();
+
+    const dataNascimento = new Date(timestampAleatorio);
+    return dataNascimento.toLocaleDateString('pt-BR');
 }
 
-function gerarCep(){
-    const cepAleatorio = ceps[Math.floor(Math.random() * ceps.lenght)];
+export function gerarCep(): string {
+    const cepAleatorio = ceps[Math.floor(Math.random() * ceps.length)];
     return cepAleatorio;
-}
+};
 
-function gerarRG(){
-    const RGAleatorio = rg[Math.floor(Math.random() * rg.lenght)];
+export function gerarRG(): string {
+    const RGAleatorio = rg[Math.floor(Math.random() * rg.length)];
     return RGAleatorio;
-}
+};
 
-function gerarCNPJ(){
+export function gerarCNPJ(): string {
     const CnpjAleatorio = cnpj[Math.floor(Math.random() * cnpj.length)];
     return CnpjAleatorio;
-}
+};
 
-const nomes = [
+const nomes: string[] = [
     "Ana", "João", "Mariana", "Pedro", "Carla", "André", "Isabel", "Rafael", "Sofia", "Gustavo",
     "Larissa", "Ricardo", "Amanda", "Felipe", "Camila", "Lucas", "Bruna", "Marcelo", "Fernanda",
     "Gabriel", "Lúcia", "Matheus", "Rodrigo", "Natália", "Diego", "Vanessa", "Raul",
@@ -102,8 +126,9 @@ const nomes = [
     "Denise", "Eversong", "Nathaly", "Nathan", "Altemisia", "Sydney", "Higor", "Tauane", "Lidiane",
     "Carol", "Izabela", "Kaio", "Betisa", "Antônio", "Heloisa", "Aryelle", "Kertely", "Lidia",
     "Monique", "Andreia", "Nathalia", "Solange", "Kauan", "Almir", "Cristiano", "Kawan", "John"
-]
-const sobrenomes = [
+];
+
+const sobrenomes: string[] = [
     "Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Almeida", "Lima", "Ferreira", "Pereira",
     "Carvalho", "Gomes", "Martins", "Rocha", "Ribeiro", "Alves", "Monteiro", "Mendes", "Barros",
     "Nascimento", "Cavalcanti", "Araújo", "Cunha", "Miranda", "Costa", "Castro", "Cardoso", "Dias",
@@ -129,12 +154,12 @@ const sobrenomes = [
     "Knauer", "Guedes", "Melato", "Kuhn", "Laviola", "Neves", "Albano", "Vongal", "Marçal", "Varella",
     "Carrarine", "Onofre", "Nobre", "Aredes", "Salvato", "Delgado", "Ventura", "Ciuldin", "Calcagno",
     "Maman"
-]
+];
 
-const ceps = ['40415265', '69317176', '93280320', '69067801', '49009079', '77825050', '49032280', '78065752',
+const ceps: string[] = ['40415265', '69317176', '93280320', '69067801', '49009079', '77825050', '49032280', '78065752',
     '60811296', '68627502', '58429160', '29161828', '72620316', '71610075', '45077056', '59625187', '64003083',
-    '39803160', '25908822', '99711210']
+    '39803160', '25908822', '99711210'];
 
-const rg = ['17.319.565-9', '44.149.591-6', '15.435.024-2', '40.362.489-7', '35.663.382-2']
+const rg: string[] = ['17.319.565-9', '44.149.591-6', '15.435.024-2', '40.362.489-7', '35.663.382-2'];
 
-const cnpj = ['49.916.093/0001-98', '02.268.939/0001-67', '26.525.339/0001-03', '07.384.022/0001-41', '96.207.810/0001-92']
+const cnpj: string[] = ['49.916.093/0001-98', '02.268.939/0001-67', '26.525.339/0001-03', '07.384.022/0001-41', '96.207.810/0001-92'];
