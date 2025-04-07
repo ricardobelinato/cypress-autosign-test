@@ -20,6 +20,7 @@ var cnpjAleatorio = (0, dataGenerator_1.gerarCNPJ)();
 var maioridadeCandidato = candidato.maioridade;
 var sexoCandidato = candidato.sexo;
 var nacionalidadeCandidato = candidato.nacionalidade;
+var deficienciaCandidato = candidato.deficiencia;
 describe("Primeiro passo da inscrição", function () {
     var dataNascimento;
     before(function () {

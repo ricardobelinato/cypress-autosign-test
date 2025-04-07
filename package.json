@@ -1,12 +1,15 @@
 {
   "name": "cypress_auto_sign",
   "description": "",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "cy:open": "cypress open"
   },
-  "author": "Ricardo Belinato <ricbelinato@gmail.com>",
-  "license": "",
+  "author": "Ricardo Belinato",
+  "contributors": [
+    "Ricardo Belinato <ricbelinato@gmail.com>"
+  ],
+  "license": "MIT",
   "devDependencies": {
     "cypress": "^14.0.1",
     "cypress-iframe": "^1.0.1",

@@ -12,6 +12,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["cypress/**/*.ts", "cypress/support/formSteps/selectCourseOptions.cy.js"],
+  "include": ["cypress/**/*.ts", "cypress/support/formSteps/secondStep.cy.ts"],
   "exclude": ["node_modules", "dist"]
 }

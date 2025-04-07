@@ -1,31 +1,36 @@
-import {
-  gerarCPF,
-  gerarDataNascimentoMaior,
-  gerarDataNascimentoMenor,
-} from "../utils/dataGenerator";
+// ─── Imports de funções utilitárias ─────────────────────────────
+import { data } from "cypress/types/jquery";
+import { gerarNomeESobrenome, gerarNomeCompleto, gerarEmail, gerarCelular, gerarCPF, gerarDataNascimentoMaior, gerarDataNascimentoMenor, gerarCep, gerarRG, gerarCNPJ } from "../utils/dataGenerator";
+import { encontrarLabelPorTexto, marcarRadioSeExistir, aceitarPoliticaPrivacidade, exibirCamposOcultos, selecionarOpcaoPorTexto } from "../utils/formHelpers";
 
-const CPFAleatorio = gerarCPF();
-let dataNascimento;
+// ─── Configurações e dados do candidato ─────────────────────────
 const { CANDIDATO, CONFIG } = require("../../config/configSpec");
-const candidato = CANDIDATO(), config = CONFIG();
+const candidato = CANDIDATO();
+const config = CONFIG();
+
+// ─── Geração de dados aleatórios ────────────────────────────────
+const cpfAleatorio = gerarCPF();
+
+// ─── Dados derivados de configurações ───────────────────────────
 const maioridadeCandidato = candidato.maioridade;
+const sexoCandidato = candidato.sexo;
+const nacionalidadeCandidato = candidato.nacionalidade;
 const deficienciaCandidato = candidato.deficiencia;
-const SexoCandidato = candidato.sexo;
 
 describe("Terceiro passo da inscrição", () => {
+  let dataNascimento: string;
+  
+  before(() => {
+    dataNascimento = maioridadeCandidato
+    ? gerarDataNascimentoMaior()
+    : gerarDataNascimentoMenor();
+  });
+
   beforeEach(() => {
     cy.intercept({
       method: "POST",
       pathname: "/api/applyment/getApplymentDataByStep/*",
     }).as("applymentLoading");
-  });
-
-  before(() => {
-    if (maioridadeCandidato) {
-      dataNascimento = gerarDataNascimentoMaior();
-    } else {
-      dataNascimento = gerarDataNascimentoMenor();
-    }
   });
 
   it("Leitura e preenchimento dos campos do segundo passo da inscrição", () => {
@@ -42,12 +47,12 @@ describe("Terceiro passo da inscrição", () => {
   
     cy.document().then((doc) => {
       const labels = [
-        { text: "CPF *", value: CPFAleatorio },
+        { text: "CPF *", value: cpfAleatorio },
       ];
 
       labels.forEach((labelObj) => {
         const label = Array.from(doc.querySelectorAll("label")).find((el) =>
-          el.textContent.includes(labelObj.text)
+          el.textContent?.includes(labelObj.text)
         );
         if (label) {
           cy.wrap(label)
@@ -80,39 +85,14 @@ describe("Terceiro passo da inscrição", () => {
   });
 
   it("Marcação dos campos radio e checkbox", () => {
-    cy.get("body").then(($body) => {
-      if (
-        $body.find(`input[type="radio"][value="${SexoCandidato}"]`).length > 0
-      ) {
-        cy.get(`input[type="radio"][value="${SexoCandidato}"]`, { log: false })
-          .should("be.visible")
-          .check({ force: true });
-      }
-    });
+    marcarRadioSeExistir(sexoCandidato);
   });
 
   if (config.validarCamposOcultos) {    
     it("Exibição de campos ocultos do terceiro passo da inscrição", () => {
-      cy.wait(1000)
-      cy.window().then((win) => {
-        let i = 0;
-        while (i < 10) {
-          Array.from(
-            win.document.getElementsByClassName("fields-hidden")
-          ).forEach((e) => {
-            e.classList.remove("fields-hidden");
-          });
-          Array.from(
-            win.document.getElementsByClassName("ps-input-hidden")
-          ).forEach((e) => {
-            e.classList.remove("ps-input-hidden");
-          });
-  
-          i++;
-        }
-      });
+      exibirCamposOcultos();
     });
-  }
+  };
 
   it("Conclusão do terceiro passo da inscrição", () => {
     cy.contains('button', 'Concluir')

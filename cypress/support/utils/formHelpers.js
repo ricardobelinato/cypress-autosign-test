@@ -4,6 +4,7 @@ exports.encontrarLabelPorTexto = encontrarLabelPorTexto;
 exports.marcarRadioSeExistir = marcarRadioSeExistir;
 exports.aceitarPoliticaPrivacidade = aceitarPoliticaPrivacidade;
 exports.exibirCamposOcultos = exibirCamposOcultos;
+exports.selecionarOpcaoPorTexto = selecionarOpcaoPorTexto;
 function encontrarLabelPorTexto(doc, textoProcurado) {
     return Array.from(doc.querySelectorAll("label")).find(function (el) { var _a; return (_a = el.textContent) === null || _a === void 0 ? void 0 : _a.includes(textoProcurado); });
 }
@@ -46,5 +47,22 @@ function exibirCamposOcultos() {
             });
         });
     });
+}
+;
+function selecionarOpcaoPorTexto(label, indexOpcao) {
+    if (indexOpcao === void 0) { indexOpcao = 0; }
+    cy.wrap(label[label.length - 2])
+        .should("exist")
+        .parent()
+        .find("input")
+        .should("exist")
+        .and("be.visible")
+        .click();
+    cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
+        .should("be.visible")
+        .find("span.ps-auto-complete-option-item")
+        .eq(indexOpcao)
+        .should("be.visible")
+        .click();
 }
 ;

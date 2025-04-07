@@ -36,9 +36,11 @@ npm install
 ```ts
 export function CONFIG(): Config {
     return {
-        url: '',
+        url: 'https://urlExemplo.com',
         ps: 0,
-        validarCamposOcultos: false
+        validarCamposOcultos: false,
+        validarPoliticaPrivacidade: false,
+        urlPoliticaPrivacidadeRubeus: "https://rbacademy.apprbs.com.br/politica-de-privacidade"
     };
 };
 
@@ -82,9 +84,9 @@ npx cypress open
       └── support/                                      # Scripts de suporte e lógica principal
             ├── formSteps/                              # Scripts específicos para cada passo da ficha de inscrição
                   ├── selectProcess.cy.ts
-                  ├── dynamicFields.cy.ts
-                  ├── selectCouseOptions.cy.ts
-                  └── submitEnrollment.cy.ts
+                  ├── firstStep.cy.ts
+                  ├── secondStep.cy.ts
+                  └── thirdStep.cy.ts
             └── utils/
                   ├── dataGenerator.ts                  # Script com funções para geração de dados fictícios
                   ├── lighthouseAudit.ts                # Executa auditorias de performance com Lighthouse durante os testes
@@ -92,3 +94,6 @@ npx cypress open
     cypress.config.js                                   # Configurações globais do Cypress
     run-tests.mjs                                       # Script pra rodar os testes via terminal por inquirer
 </pre>
+
+## 📄 Licença
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](./LICENSE) para mais detalhes.

@@ -21,7 +21,7 @@ const cnpjAleatorio = gerarCNPJ();
 const maioridadeCandidato = candidato.maioridade;
 const sexoCandidato = candidato.sexo;
 const nacionalidadeCandidato = candidato.nacionalidade;
-
+const deficienciaCandidato = candidato.deficiencia;
 
 describe("Primeiro passo da inscrição", () => {
   let dataNascimento: string;

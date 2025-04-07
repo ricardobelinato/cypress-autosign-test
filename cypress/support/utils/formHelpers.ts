@@ -45,4 +45,19 @@ export function exibirCamposOcultos() {
       });
     });
 };
-  
+
+export function selecionarOpcaoPorTexto(label: JQuery<HTMLElement>, indexOpcao: number = 0) {
+  cy.wrap(label[label.length-2])
+    .should("exist")
+    .parent()
+    .find("input")
+    .should("exist")
+    .and("be.visible")
+    .click();
+  cy.get("div.ps-comp-select-container-column.ps-auto-complete-option-container")
+    .should("be.visible")
+    .find("span.ps-auto-complete-option-item")
+    .eq(indexOpcao)
+    .should("be.visible")
+    .click();
+};
